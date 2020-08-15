@@ -1,6 +1,7 @@
 Sub Stocks()
 
 ' Define the variables
+
     Dim ticker As String
     Dim volume As Double
     Dim yeary_open As Double
@@ -15,20 +16,26 @@ Sub Stocks()
 
  
 'Start counter
+
     ticker = 0
     volume = 0
    
     
 'Do this for all worksheets
+
     For Each ws In Worksheets
     
-   Summary_Table_Row = 2
+    Summary_Table_Row = 2
     year_open_row = 2
+    
+    
 'find last row for all worksheets
+
     lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
  
   
 ' name the columns of the outputs
+
     ws.Range("I1") = "Ticker"
     ws.Range("J1") = "Yearly Change"
     ws.Range("K1") = "Percent Change"
@@ -41,17 +48,23 @@ Sub Stocks()
     
  
 'Start For Loop
+
 For i = 2 To lastrow
+
     ' Find the Ticker and Volume
+    
         If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
-        ticker = ws.Cells(i, 1).Value
-        volume = volume + ws.Cells(i, 7).Value
+            ticker = ws.Cells(i, 1).Value
+            volume = volume + ws.Cells(i, 7).Value
         ws.Range("I" & Summary_Table_Row).Value = ticker
         ws.Range("L" & Summary_Table_Row).Value = volume
         
     'closing price
+    
         year_close = ws.Cells(i, 6).Value
+        
     'opening price
+    
         year_open = ws.Cells(year_open_row, 3).Value
         
      'calculate yearly change
@@ -59,24 +72,23 @@ For i = 2 To lastrow
         ws.Range("J" & Summary_Table_Row).Value = yearly_change
         
         
-        
      'calculate the percent change and adjust for dividing by 0
         If year_open = 0 Then
-        percent_change = 0
+            percent_change = 0
         Else
-        percent_change = yearly_change / year_open
+            percent_change = yearly_change / year_open
         
         ws.Range("K" & Summary_Table_Row).Value = percent_change
         ws.Range("K" & Summary_Table_Row).NumberFormat = "0.00%"
         
         End If
        
-        'Conditionals
+      'Conditionals
               
         If percent_change < 0 Then
-        ws.Range("K" & Summary_Table_Row).Interior.ColorIndex = 3
+            ws.Range("K" & Summary_Table_Row).Interior.ColorIndex = 3
         ElseIf percent_change > 0 Then
-        ws.Range("K" & Summary_Table_Row).Interior.ColorIndex = 4
+            ws.Range("K" & Summary_Table_Row).Interior.ColorIndex = 4
         End If
       
 'reset the variables
@@ -88,52 +100,67 @@ volume = 0
 year_open = 0
 year_close = 0
 Summary_Table_Row = Summary_Table_Row + 1
+
 Else
+
 volume = volume + ws.Cells(i, 7).Value
+
 End If
+
 Next i
 
-Dim n As Integer
-        Dim Max, Min As Double
+'Challenge
+
+'define variables
+
+        Dim nextlast As Integer
+        Dim Max As Double
+        Dim Min As Double
         Dim Max_Vol As Double
+        
+'set to 0
+
         Max = 0
         Min = 0
         Max_Vol = 0
+        
+'find new last row
 
-        n = ws.Cells(Rows.Count, 11).End(xlUp).Row
+        nextlast = ws.Cells(Rows.Count, 11).End(xlUp).Row
 
-        For j = 2 To n
+'for loop on the values for the max and min and volume
+
+        For j = 2 To nextlast
             
             If ws.Range("K" & j).Value > Max Then
                 Max = ws.Range("K" & j).Value
-                ws.Range("Q2").Value = Max
-                ws.Range("Q2").Value = ws.Range("K" & j).Value
-                ws.Range("Q2").NumberFormat = "0.00%"
-                ws.Range("P2").Value = ws.Cells(j, 1).Value
+            ws.Range("Q2").Value = Max
+            ws.Range("Q2").Value = ws.Range("K" & j).Value
+            ws.Range("Q2").NumberFormat = "0.00%"
+            ws.Range("P2").Value = ws.Cells(j, 1).Value
                         
             ElseIf Range("K" & j).Value < Min Then
                 Min = ws.Range("K" & j).Value
-                ws.Range("Q3").Value = Min
-                ws.Range("Q3").Value = ws.Range("K" & j).Value
-                ws.Range("Q3").NumberFormat = "0.00%"
-                ws.Range("P3").Value = ws.Cells(j, 1).Value
+            ws.Range("Q3").Value = Min
+            ws.Range("Q3").Value = ws.Range("K" & j).Value
+            ws.Range("Q3").NumberFormat = "0.00%"
+            ws.Range("P3").Value = ws.Cells(j, 1).Value
 
             End If
             
             If ws.Range("L" & j).Value > Max_Vol Then
                 Max_Vol = ws.Range("L" & j).Value
-                ws.Range("Q4").Value = Max_Vol
-                ws.Range("Q4").Value = ws.Range("L" & j).Value
-                ws.Range("P4").Value = ws.Cells(j, 1).Value
+            ws.Range("Q4").Value = Max_Vol
+            ws.Range("Q4").Value = ws.Range("L" & j).Value
+            ws.Range("P4").Value = ws.Cells(j, 1).Value
             
             End If
             
 
             
-        Next j
+Next j
 ws.Cells.EntireColumn.AutoFit
 Next ws
 
 
 End Sub
-
